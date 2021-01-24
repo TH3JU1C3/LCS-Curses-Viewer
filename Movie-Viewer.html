@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+	<head>
+		<title>LCS Movie Viewer</title>
+		<meta charset="ASCII">
+		<style>
+			canvas {
+				border: 1px solid black;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="A">
+		</p>
+		<p id="B">
+		</p>
+		<input  type="file" id="uploader" value="Import" accept="application/CMV" />
+		<button type="button" onclick="readFile();">Upload File</button>
+		<button type="button" onclick="getMeta();">DOIT</button>
+		<br>
+		<canvas id="movieScreen" width="640px", height="400px"></canvas>
+		<script src="viewerScript.js"></script>
+	</body>
+</html>
