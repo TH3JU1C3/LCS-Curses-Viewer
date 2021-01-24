@@ -10,13 +10,13 @@
 		</style>
 	</head>
 	<body>
-		<p id="A">
+		<p id="FrameDisplayer">
+			Current Frame: 
 		</p>
-		<p id="B">
-		</p>
-		<input  type="file" id="uploader" value="Import" accept="application/CMV" />
+		<input  type="file" id="uploader" value="Import" accept=".cmv,.cpc" />
 		<button type="button" onclick="readFile();">Upload File</button>
-		<button type="button" onclick="getMeta();">DOIT</button>
+		<button type="button" onclick="incrementFrameNumAndDisplay();">Next Frame</button>
+		<button type="button" onclick="decrementFrameNumAndDisplay();">Prev Frame</button>
 		<br>
 		<canvas id="movieScreen" width="640px", height="400px"></canvas>
 		<script src="viewerScript.js"></script>
