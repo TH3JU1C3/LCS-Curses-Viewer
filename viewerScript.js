@@ -38,6 +38,8 @@ function displayPicture() {
 	ctx.font = "16px Consolas";
 	ctx.fillStyle = "white";
 	let colours = ["black","blue","green","cyan","red","magenta","yellow","white"];
+	let brightColours = ["#808080","#8080FF","#80FF80","#80FFFF","#FF8080","#FF80FF","#FFFF80","#FFFFFF"];
+	let bright = false;
 	let bColour = colours[0];
 	let fColour = colours[7];
 	let dword = 3 + (frameNum * pictureBlockSize);
@@ -45,19 +47,26 @@ function displayPicture() {
 	let charac = "";
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
-				charac = String.fromCharCode(convert437ToUTF(data[dword4]));
-				fColour = colours[data[dword4+1]];
-				bColour = colours[data[dword4+2]];
-				dword++;
-				dword4 = dword*4;
-				if (charac == "\0" || charac == " ") {
-					continue;
-				}
-				ctx.fillStyle = bColour;
-				ctx.fillRect(x*8,y*16,(x+1)*8,(y+1)*16);
-				ctx.fillStyle = fColour;
-				ctx.fillText(charac,x*8,y*16,8);
-				console.log(data[dword4],data[dword4 + 1],data[dword4 + 2],data[dword4 + 3]);
+			charac = String.fromCharCode(convert437ToUTF(data[dword4]));
+			fColour = colours[data[dword4+1]];
+			bColour = colours[data[dword4+2]];
+			if (data[dword4+3] == 1) {
+				bright = true;
+				fColour = brightColours[data[dword4+1]];
+			}
+			else {
+				bright = false;
+			}
+			ctx.fillStyle = bColour;
+			ctx.fillRect(x*8,y*16,(x+1)*8,(y+1)*16);
+			ctx.fillStyle = fColour;
+			ctx.fillText(charac,x*8,y*16,8);
+			dword++;
+			dword4 = dword*4;
+			if (charac == "\0" || charac == " ") {
+				continue;
+			}
+			console.log(data[dword4],data[dword4 + 1],data[dword4 + 2],data[dword4 + 3]);
 		}
 	}
 	console.log("G");
