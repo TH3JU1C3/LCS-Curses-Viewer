@@ -1,9 +1,19 @@
 let data = [];
+let pictures = [];
 let frameNum = 0;
+let lastTime = 0;
+let editingCell = {"x":0,"y":0};
+let editMode = false;
 const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 const ctx = canvas.getContext("2d");
+
+class Frame {
+	constructor(dat,) {
+		
+	}
+}
 
 function readFile() {
 	data = [];
@@ -21,38 +31,80 @@ function readFile() {
 		for (let i = 0; i < x.length; i++) {
 			data.push(x.charCodeAt(i));
 		}
+		pictures = readPictures();
 		console.log(data);
+		//clearScreen();
+		resetFrame();
 		displayPicture();
-		displayFrameNum();
 	}
 };
 
-function displayPicture() {
-	const picnum = data[0];
-	const dimx = data[4];
-	const dimy = data[8];
+function readBytes(index,size) {
+	let bytes = []
+	for (let i = size - 1; i >= 0; i--) {
+		bytes.push(data[index + i]);
+	}
+	let number = 0;
+	let power = size - 1;
+	for (let i = 0; i < bytes.length; i++) {
+		number += bytes[i] * Math.pow(256,power);
+		power--;
+	}
+	return number;
+}
+
+function readPictures() {
+	const picnum = readBytes(0,4);
+	const dimx = readBytes(4,4);
+	const dimy = readBytes(8,4);
 	const pictureBlockSize = dimx*dimy;
+	let dword = 0;
+	let dword4 = dword*4;
+	let pictures = [];
+	let picture = [];
+	for (let i = 0; i < picnum; i++) {
+		dword = 3 + (i * pictureBlockSize);
+		dword4 = dword*4;
+		for (let x = 0; x < dimx && x < 80; x++) {
+			for (let y = 0; y < dimy && y < 25; y++) {
+				picture.push(data[dword4    ]);
+				picture.push(data[dword4 + 1]);
+				picture.push(data[dword4 + 2]);
+				picture.push(data[dword4 + 3]);
+				dword++;
+				dword4 = dword*4;
+			}
+		}
+		pictures.push(picture);
+		picture = [];
+	}
+	return pictures;
+}
+
+function displayPicture() {
+	const dimx = readBytes(4,4);
+	const dimy = readBytes(8,4);
+	let picture = pictures[frameNum];
 	
-	ctx.fillStyle = "black";
-	ctx.fillRect(0,0,canvasWidth,canvasHeight);
+	//clearScreen();
 	ctx.font = "16px Consolas";
 	ctx.fillStyle = "white";
-	let colours = ["black","blue","green","cyan","red","magenta","yellow","white"];
-	let brightColours = ["#808080","#8080FF","#80FF80","#80FFFF","#FF8080","#FF80FF","#FFFF80","#FFFFFF"];
+	let colours = ["black","blue","green","cyan","red","purple","yellow","white"];
+	let brightColours = ["#808080","#8080FF","#80FF80","#80FFFF","#FF8080","#A64CA6","#FFFF80","#FFFFFF"];
 	let bright = false;
 	let bColour = colours[0];
 	let fColour = colours[7];
-	let dword = 3 + (frameNum * pictureBlockSize);
-	let dword4 = dword*4;
 	let charac = "";
+	
+	let i = 0;
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
-			charac = String.fromCharCode(convert437ToUTF(data[dword4]));
-			fColour = colours[data[dword4+1]];
-			bColour = colours[data[dword4+2]];
-			if (data[dword4+3] == 1) {
+			charac = String.fromCharCode(convert437ToUTF(picture[i]));
+			fColour = colours[picture[i+1]];
+			bColour = colours[picture[i+2]];
+			if (picture[i+3] == 1) {
 				bright = true;
-				fColour = brightColours[data[dword4+1]];
+				fColour = brightColours[picture[i+1]];
 			}
 			else {
 				bright = false;
@@ -61,32 +113,83 @@ function displayPicture() {
 			ctx.fillRect(x*8,y*16,(x+1)*8,(y+1)*16);
 			ctx.fillStyle = fColour;
 			ctx.fillText(charac,x*8,y*16,8);
-			dword++;
-			dword4 = dword*4;
-			if (charac == "\0" || charac == " ") {
-				continue;
-			}
-			console.log(data[dword4],data[dword4 + 1],data[dword4 + 2],data[dword4 + 3]);
+			i += 4;
 		}
 	}
 	console.log("G");
 }
 
+function editing() {
+	if (editMode) {
+		return;
+	}
+	else {
+		editMode = true;
+	}
+	const dimx = readBytes(4,4);
+	const dimy = readBytes(8,4);
+	document.addEventListener("keydown", event => {
+		switch (event.keyCode) {
+			case 32: // Space
+				pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = 80; // Press P for Pain
+				pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = 7;
+				pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = 0;
+				displayPicture();
+				break;
+			case 37: // Left
+				if (editingCell["x"] != 0) {
+					editingCell["x"]--;
+				}
+				break;
+			case 38: // Up
+				if (editingCell["y"] != 0) {
+					editingCell["y"]--;
+				}
+				break;
+			case 39: // Right
+				if (editingCell["x"] != dimx) {
+					editingCell["x"]++;
+				}
+				break;
+			case 40: // Down
+				if (editingCell["y"] != dimy) {
+					editingCell["y"]++;
+				}
+				break;
+		}
+		//Time.sleep(20);
+		console.log(editingCell);
+	})
+}
+
 function incrementFrameNumAndDisplay() {
+	resetted = false;
 	frameNum++;
-	if (frameNum > data[0]) {
+	if (frameNum >= data[0]) {
+		//clearScreen();
 		frameNum = 0;
+		resetted = true;
 	}
 	displayPicture();
 	displayFrameNum();
+	return resetted;
 }
 
 function decrementFrameNumAndDisplay() {
+	resetted = false;
 	frameNum--;
 	if (frameNum < 0) {
-		frameNum = data[0];
+		//clearScreen();
+		frameNum = data[0]-1;
+		resetted = true;
 	}
 	displayPicture();
+	displayFrameNum();
+	return resetted;
+}
+
+function resetFrame() {
+	frameNum = 0;
 	displayFrameNum();
 }
 
@@ -94,13 +197,33 @@ function displayFrameNum() {
 	document.getElementById("FrameDisplayer").innerHTML = "Current Frame: " + frameNum;
 }
 
+function clearScreen() {
+	ctx.fillStyle = "black";
+	ctx.fillRect(0,0,canvasWidth,canvasHeight);
+}
+
+/*
+function playCMV(timestamp) {
+	resetFrame();
+	while (true) {
+		let dTime = timestamp - lastTime;
+		lastTime = timestamp;
+		if (dTime >= 10) {
+			if (incrementFrameNumAndDisplay()) {
+				break;
+			}
+		}
+	}
+}
+*/
+
 function convert437ToUTF(code) {
 	let utfCode = code;
 	if ((code >= 32 && code <= 126) || code == 0) {
 		utfCode = code;
 	}
 	else {
-		switch (code) {
+		switch (code) { // This was tedious
 			case 1: utfCode = 0x263A; break;
 			case 2: utfCode = 0x263B; break;
 			case 3: utfCode = 0x2665; break;
@@ -265,3 +388,4 @@ function convert437ToUTF(code) {
 	}
 	return utfCode;
 }
+

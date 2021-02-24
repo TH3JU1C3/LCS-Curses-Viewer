@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-gb">
 	<head>
-		<title>LCS Movie Viewer</title>
+		<title>LCS CPC Viewer</title>
 		<meta charset="ASCII">
 		<style>
 			canvas {
@@ -13,11 +13,11 @@
 		<p id="FrameDisplayer">
 			Current Frame: 
 		</p>
-		<input  type="file" id="uploader" value="Import" accept=".cmv,.cpc" />
+		<input  type="file" id="uploader" value="Import" accept=".cpc" />
 		<button type="button" onclick="readFile();">Upload File</button>
-		<button type="button" onclick="incrementFrameNumAndDisplay();">Next Frame</button>
-		<button type="button" onclick="decrementFrameNumAndDisplay();">Prev Frame</button>
-		<button type="button" onclick="playCMV();">Play CMV</button>
+		<button type="button" onclick="incrementFrameNumAndDisplay();">Next Image</button>
+		<button type="button" onclick="decrementFrameNumAndDisplay();">Prev Image</button>
+		<button type="button" onclick="editing();">Edit</button>
 		<br>
 		<canvas id="movieScreen" width="640px", height="400px"></canvas>
 		<script src="viewerScript.js"></script>
