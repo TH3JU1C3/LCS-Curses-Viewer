@@ -2,6 +2,7 @@ let data = [];
 let pictures = [];
 let frameNum = 0;
 let lastTime = 0;
+let ys = 19;
 let editingCell = {"x":0,"y":0};
 let editMode = false;
 const canvas = document.getElementById("movieScreen");
@@ -33,8 +34,8 @@ function readFile() {
 		}
 		pictures = readPictures();
 		console.log(data);
-		//clearScreen();
 		resetFrame();
+		clearCanvas();
 		displayPicture();
 	}
 };
@@ -86,10 +87,9 @@ function displayPicture() {
 	const dimy = readBytes(8,4);
 	let picture = pictures[frameNum];
 	
-	//clearScreen();
 	ctx.font = "16px Consolas";
-	ctx.fillStyle = "white";
-	let colours = ["black","blue","green","cyan","red","purple","yellow","white"];
+	ctx.fillStyle = "#CCCCCC";
+	let colours = ["black","blue","green","cyan","red","purple","yellow","#CCCCCC"];
 	let brightColours = ["#808080","#8080FF","#80FF80","#80FFFF","#FF8080","#A64CA6","#FFFF80","#FFFFFF"];
 	let bright = false;
 	let bColour = colours[0];
@@ -110,13 +110,22 @@ function displayPicture() {
 				bright = false;
 			}
 			ctx.fillStyle = bColour;
-			ctx.fillRect(x*8,y*16,(x+1)*8,(y+1)*16);
+			ctx.fillRect(x*8,y*ys,8,ys);
 			ctx.fillStyle = fColour;
-			ctx.fillText(charac,x*8,y*16,8);
+			ctx.fillText(charac,x*8,((y+1)*ys)-4,8,ys);
 			i += 4;
 		}
 	}
 	console.log("G");
+}
+
+function showCursor() {
+	const cursorColour = "pink";
+	let x = editingCell["x"];
+	let y = editingCell["y"];
+	ctx.fillStyle = cursorColour;
+	ctx.fillRect(x*8,y*ys,8,ys);
+	console.log(x*8,y*ys,(x+1)*8,(y+1)*ys);
 }
 
 function editing() {
@@ -125,10 +134,12 @@ function editing() {
 	}
 	else {
 		editMode = true;
+		showCursor();
 	}
 	const dimx = readBytes(4,4);
 	const dimy = readBytes(8,4);
 	document.addEventListener("keydown", event => {
+		displayPicture();
 		switch (event.keyCode) {
 			case 32: // Space
 				pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = 80; // Press P for Pain
@@ -140,21 +151,25 @@ function editing() {
 				if (editingCell["x"] != 0) {
 					editingCell["x"]--;
 				}
+				showCursor();
 				break;
 			case 38: // Up
 				if (editingCell["y"] != 0) {
 					editingCell["y"]--;
 				}
+				showCursor();
 				break;
 			case 39: // Right
-				if (editingCell["x"] != dimx) {
+				if (editingCell["x"] < dimx-1) {
 					editingCell["x"]++;
 				}
+				showCursor();
 				break;
 			case 40: // Down
-				if (editingCell["y"] != dimy) {
+				if (editingCell["y"] < dimy-1) {
 					editingCell["y"]++;
 				}
+				showCursor();
 				break;
 		}
 		//Time.sleep(20);
@@ -166,7 +181,6 @@ function incrementFrameNumAndDisplay() {
 	resetted = false;
 	frameNum++;
 	if (frameNum >= data[0]) {
-		//clearScreen();
 		frameNum = 0;
 		resetted = true;
 	}
@@ -179,7 +193,6 @@ function decrementFrameNumAndDisplay() {
 	resetted = false;
 	frameNum--;
 	if (frameNum < 0) {
-		//clearScreen();
 		frameNum = data[0]-1;
 		resetted = true;
 	}
@@ -197,11 +210,6 @@ function displayFrameNum() {
 	document.getElementById("FrameDisplayer").innerHTML = "Current Frame: " + frameNum;
 }
 
-function clearScreen() {
-	ctx.fillStyle = "black";
-	ctx.fillRect(0,0,canvasWidth,canvasHeight);
-}
-
 /*
 function playCMV(timestamp) {
 	resetFrame();
@@ -216,6 +224,24 @@ function playCMV(timestamp) {
 	}
 }
 */
+
+function toggleYs() {
+	if (ys === 19) {
+		ys = 25;
+		//canvas.height = "625px";
+	}
+	else {
+		ys = 19;
+		//canvas.height = "475px";
+	}
+	clearCanvas();
+	displayPicture();
+}
+
+function clearCanvas() {
+	ctx.fillStyle = "white";
+	ctx.fillRect(0,0,canvasWidth,canvasHeight);
+}
 
 function convert437ToUTF(code) {
 	let utfCode = code;
