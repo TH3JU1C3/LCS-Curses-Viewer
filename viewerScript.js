@@ -89,8 +89,9 @@ function displayPicture() {
 	
 	ctx.font = "16px Consolas";
 	ctx.fillStyle = "#CCCCCC";
-	let colours = ["black","blue","green","cyan","red","purple","yellow","#CCCCCC"];
-	let brightColours = ["#808080","#8080FF","#80FF80","#80FFFF","#FF8080","#A64CA6","#FFFF80","#FFFFFF"];
+	// colors are black,blue,green,cyan,red,purple,yellow,white and then bright versions respectively
+	let colours = ["#0C0C0C","#0037DA","#13A10E","#3A96DD","#C50F1F","#881798","#C19C00","#CCCCCC"];
+	let brightColours = ["#767676","#3B78FF","#16C60C","#61D6D6","#E74856","#B4009E","#F9F1A5","#F2F2F2"];
 	let bright = false;
 	let bColour = colours[0];
 	let fColour = colours[7];
