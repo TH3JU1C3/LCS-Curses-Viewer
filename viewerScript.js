@@ -5,6 +5,10 @@ let lastTime = 0;
 let ys = 19;
 let editingCell = {"x":0,"y":0};
 let editMode = false;
+let editChar = 0;
+let editFGroundC = 0;
+let editBGroundC = 0;
+let editBright = 0;
 const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -143,9 +147,10 @@ function editing() {
 		displayPicture();
 		switch (event.keyCode) {
 			case 32: // Space
-				pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = 80; // Press P for Pain
-				pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = 7;
-				pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = 0;
+				pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editChar;
+				pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editFGroundC;
+				pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editBGroundC;
+				pictures[frameNum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editBright;
 				displayPicture();
 				break;
 			case 37: // Left
@@ -416,3 +421,30 @@ function convert437ToUTF(code) {
 	return utfCode;
 }
 
+function changeEditChar(charNum) {
+	if (charNum >= 0 && charNum <= 255) {
+		editChar = charNum;
+	}
+	return;
+}
+
+function changeFGround(colour) {
+	if (colour >= 0 && colour <= 7) {
+		editFGroundC = colour;
+	}
+	return;
+}
+
+function changeBGround(colour) {
+	if (colour >= 0 && colour <= 7) {
+		editBGroundC = colour;
+	}
+	return;
+}
+
+function changeBright(bool) {
+	if (bool === 0 ||bool === 1) {
+		editBright = bool;
+	}
+	return;
+}
