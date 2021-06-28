@@ -7,7 +7,7 @@ let editingCell = {"x":0,"y":0};
 let editMode = false;
 let editChar = 0;
 let editFGroundC = 0;
-let editBGroundC = 0;
+let editBGroundC = 7;
 let editBright = 0;
 const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
@@ -421,7 +421,8 @@ function convert437ToUTF(code) {
 	return utfCode;
 }
 
-function changeEditChar(charNum) {
+function changeEditChar(HexNum) {
+	charNum = parseInt(HexNum,16);
 	if (charNum >= 0 && charNum <= 255) {
 		editChar = charNum;
 	}

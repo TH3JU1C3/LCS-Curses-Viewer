@@ -2,10 +2,22 @@
 <html lang="en-gb">
 	<head>
 		<title>LCS CPC Viewer</title>
-		<meta charset="ASCII">
+		<meta charset="utf-8">
 		<style>
 			canvas {
 				border: 1px solid black;
+			}
+			.scrollable {
+				height: 625px; /* or any value */
+				overflow-y: auto;
+				width: 50%;
+				float: right;
+			}
+			.scrollable > button {
+				width: 30px;
+			}
+			img {
+				display: none;
 			}
 		</style>
 	</head>
@@ -23,5 +35,278 @@
 		<canvas id="movieScreen" width="640px", height="625px"></canvas>
 		<script src="viewerScript.js"></script>
 		<img src="example.png"></img>
+		<aside class="scrollable">
+			<button type="button" onclick="changeEditChar('00');">\0<br>00</button>
+			<button type="button" onclick="changeEditChar('01');">&#x263A;<br>01</button>
+			<button type="button" onclick="changeEditChar('02');">&#x263B;<br>02</button>
+			<button type="button" onclick="changeEditChar('03');">&#x2665;<br>03</button>
+			<button type="button" onclick="changeEditChar('04');">&#x2666;<br>04</button>
+			<button type="button" onclick="changeEditChar('05');">&#x2663;<br>05</button>
+			<button type="button" onclick="changeEditChar('06');">&#x2660;<br>06</button>
+			<button type="button" onclick="changeEditChar('07');">&#x2022;<br>07</button>
+			<button type="button" onclick="changeEditChar('08');">&#x25D8;<br>08</button>
+			<button type="button" onclick="changeEditChar('09');">&#x25CB;<br>09</button>
+			<button type="button" onclick="changeEditChar('0A');">&#x25D9;<br>0A</button>
+			<button type="button" onclick="changeEditChar('0B');">&#x2642;<br>0B</button>
+			<button type="button" onclick="changeEditChar('0C');">&#x2640;<br>0C</button>
+			<button type="button" onclick="changeEditChar('0D');">&#x266A;<br>0D</button>
+			<button type="button" onclick="changeEditChar('0E');">&#x266B;<br>0E</button>
+			<button type="button" onclick="changeEditChar('0F');">&#x263C;<br>0F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('10');">&#x25BA;<br>10</button>
+			<button type="button" onclick="changeEditChar('11');">&#x25C4;<br>11</button>
+			<button type="button" onclick="changeEditChar('12');">&#x2195;<br>12</button>
+			<button type="button" onclick="changeEditChar('13');">&#x203C;<br>13</button>
+			<button type="button" onclick="changeEditChar('14');">&#x00B6;<br>14</button>
+			<button type="button" onclick="changeEditChar('15');">&#x00A7;<br>15</button>
+			<button type="button" onclick="changeEditChar('16');">&#x25AC;<br>16</button>
+			<button type="button" onclick="changeEditChar('17');">&#x21A8;<br>17</button>
+			<button type="button" onclick="changeEditChar('18');">&#x2191;<br>18</button>
+			<button type="button" onclick="changeEditChar('19');">&#x2193;<br>19</button>
+			<button type="button" onclick="changeEditChar('1A');">&#x2192;<br>1A</button>
+			<button type="button" onclick="changeEditChar('1B');">&#x2190;<br>1B</button>
+			<button type="button" onclick="changeEditChar('1C');">&#x221F;<br>1C</button>
+			<button type="button" onclick="changeEditChar('1D');">&#x2194;<br>1D</button>
+			<button type="button" onclick="changeEditChar('1E');">&#x25B2;<br>1E</button>
+			<button type="button" onclick="changeEditChar('1F');">&#x25BC;<br>1F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('20');">SP<br>20</button>
+			<button type="button" onclick="changeEditChar('21');">!<br>21</button>
+			<button type="button" onclick="changeEditChar('22');">"<br>22</button>
+			<button type="button" onclick="changeEditChar('23');">#<br>23</button>
+			<button type="button" onclick="changeEditChar('24');">$<br>24</button>
+			<button type="button" onclick="changeEditChar('25');">%<br>25</button>
+			<button type="button" onclick="changeEditChar('26');">&amp;<br>26</button>
+			<button type="button" onclick="changeEditChar('27');">'<br>27</button>
+			<button type="button" onclick="changeEditChar('28');">(<br>28</button>
+			<button type="button" onclick="changeEditChar('29');">)<br>29</button>
+			<button type="button" onclick="changeEditChar('2A');">*<br>2A</button>
+			<button type="button" onclick="changeEditChar('2B');">+<br>2B</button>
+			<button type="button" onclick="changeEditChar('2C');">,<br>2C</button>
+			<button type="button" onclick="changeEditChar('2D');">-<br>2D</button>
+			<button type="button" onclick="changeEditChar('2E');">.<br>2E</button>
+			<button type="button" onclick="changeEditChar('2F');">/<br>2F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('30');">0<br>30</button>
+			<button type="button" onclick="changeEditChar('31');">1<br>31</button>
+			<button type="button" onclick="changeEditChar('32');">2<br>32</button>
+			<button type="button" onclick="changeEditChar('33');">3<br>33</button>
+			<button type="button" onclick="changeEditChar('34');">4<br>34</button>
+			<button type="button" onclick="changeEditChar('35');">5<br>35</button>
+			<button type="button" onclick="changeEditChar('36');">6<br>36</button>
+			<button type="button" onclick="changeEditChar('37');">7<br>37</button>
+			<button type="button" onclick="changeEditChar('38');">8<br>38</button>
+			<button type="button" onclick="changeEditChar('39');">9<br>39</button>
+			<button type="button" onclick="changeEditChar('3A');">:<br>3A</button>
+			<button type="button" onclick="changeEditChar('3B');">;<br>3B</button>
+			<button type="button" onclick="changeEditChar('3C');">&lt;<br>3C</button>
+			<button type="button" onclick="changeEditChar('3D');">=<br>3D</button>
+			<button type="button" onclick="changeEditChar('3E');">&gt;<br>3E</button>
+			<button type="button" onclick="changeEditChar('3F');">?<br>3F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('40');">@<br>40</button>
+			<button type="button" onclick="changeEditChar('41');">A<br>41</button>
+			<button type="button" onclick="changeEditChar('42');">B<br>42</button>
+			<button type="button" onclick="changeEditChar('43');">C<br>43</button>
+			<button type="button" onclick="changeEditChar('44');">D<br>44</button>
+			<button type="button" onclick="changeEditChar('45');">E<br>45</button>
+			<button type="button" onclick="changeEditChar('46');">F<br>46</button>
+			<button type="button" onclick="changeEditChar('47');">G<br>47</button>
+			<button type="button" onclick="changeEditChar('48');">H<br>48</button>
+			<button type="button" onclick="changeEditChar('49');">I<br>49</button>
+			<button type="button" onclick="changeEditChar('4A');">J<br>4A</button>
+			<button type="button" onclick="changeEditChar('4B');">K<br>4B</button>
+			<button type="button" onclick="changeEditChar('4C');">L<br>4C</button>
+			<button type="button" onclick="changeEditChar('4D');">M<br>4D</button>
+			<button type="button" onclick="changeEditChar('4E');">N<br>4E</button>
+			<button type="button" onclick="changeEditChar('4F');">O<br>4F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('50');">P<br>50</button>
+			<button type="button" onclick="changeEditChar('51');">Q<br>51</button>
+			<button type="button" onclick="changeEditChar('52');">R<br>52</button>
+			<button type="button" onclick="changeEditChar('53');">S<br>53</button>
+			<button type="button" onclick="changeEditChar('54');">T<br>54</button>
+			<button type="button" onclick="changeEditChar('55');">U<br>55</button>
+			<button type="button" onclick="changeEditChar('56');">V<br>56</button>
+			<button type="button" onclick="changeEditChar('57');">W<br>57</button>
+			<button type="button" onclick="changeEditChar('58');">X<br>58</button>
+			<button type="button" onclick="changeEditChar('59');">Y<br>59</button>
+			<button type="button" onclick="changeEditChar('5A');">Z<br>5A</button>
+			<button type="button" onclick="changeEditChar('5B');">[<br>5B</button>
+			<button type="button" onclick="changeEditChar('5C');">\<br>5C</button>
+			<button type="button" onclick="changeEditChar('5D');">]<br>5D</button>
+			<button type="button" onclick="changeEditChar('5E');">^<br>5E</button>
+			<button type="button" onclick="changeEditChar('5F');">_<br>5F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('60');">`<br>60</button>
+			<button type="button" onclick="changeEditChar('61');">a<br>61</button>
+			<button type="button" onclick="changeEditChar('62');">b<br>62</button>
+			<button type="button" onclick="changeEditChar('63');">c<br>63</button>
+			<button type="button" onclick="changeEditChar('64');">d<br>64</button>
+			<button type="button" onclick="changeEditChar('65');">e<br>65</button>
+			<button type="button" onclick="changeEditChar('66');">f<br>66</button>
+			<button type="button" onclick="changeEditChar('67');">g<br>67</button>
+			<button type="button" onclick="changeEditChar('68');">h<br>68</button>
+			<button type="button" onclick="changeEditChar('69');">i<br>69</button>
+			<button type="button" onclick="changeEditChar('6A');">j<br>6A</button>
+			<button type="button" onclick="changeEditChar('6B');">k<br>6B</button>
+			<button type="button" onclick="changeEditChar('6C');">l<br>6C</button>
+			<button type="button" onclick="changeEditChar('6D');">m<br>6D</button>
+			<button type="button" onclick="changeEditChar('6E');">n<br>6E</button>
+			<button type="button" onclick="changeEditChar('6F');">o<br>6F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('70');">p<br>70</button>
+			<button type="button" onclick="changeEditChar('71');">q<br>71</button>
+			<button type="button" onclick="changeEditChar('72');">r<br>72</button>
+			<button type="button" onclick="changeEditChar('73');">s<br>73</button>
+			<button type="button" onclick="changeEditChar('74');">t<br>74</button>
+			<button type="button" onclick="changeEditChar('75');">u<br>75</button>
+			<button type="button" onclick="changeEditChar('76');">v<br>76</button>
+			<button type="button" onclick="changeEditChar('77');">w<br>77</button>
+			<button type="button" onclick="changeEditChar('78');">x<br>78</button>
+			<button type="button" onclick="changeEditChar('79');">w<br>79</button>
+			<button type="button" onclick="changeEditChar('7A');">z<br>7A</button>
+			<button type="button" onclick="changeEditChar('7B');">{<br>7B</button>
+			<button type="button" onclick="changeEditChar('7C');">|<br>7C</button>
+			<button type="button" onclick="changeEditChar('7D');">}<br>7D</button>
+			<button type="button" onclick="changeEditChar('7E');">~<br>7E</button>
+			<button type="button" onclick="changeEditChar('7F');">&#x2302;<br>7F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('80');"><br>80</button>
+			<button type="button" onclick="changeEditChar('81');"><br>81</button>
+			<button type="button" onclick="changeEditChar('82');"><br>82</button>
+			<button type="button" onclick="changeEditChar('83');"><br>83</button>
+			<button type="button" onclick="changeEditChar('84');"><br>84</button>
+			<button type="button" onclick="changeEditChar('85');"><br>85</button>
+			<button type="button" onclick="changeEditChar('86');"><br>86</button>
+			<button type="button" onclick="changeEditChar('87');"><br>87</button>
+			<button type="button" onclick="changeEditChar('88');"><br>88</button>
+			<button type="button" onclick="changeEditChar('89');"><br>89</button>
+			<button type="button" onclick="changeEditChar('8A');"><br>8A</button>
+			<button type="button" onclick="changeEditChar('8B');"><br>8B</button>
+			<button type="button" onclick="changeEditChar('8C');"><br>8C</button>
+			<button type="button" onclick="changeEditChar('8D');"><br>8D</button>
+			<button type="button" onclick="changeEditChar('8E');"><br>8E</button>
+			<button type="button" onclick="changeEditChar('8F');"><br>8F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('90');"><br>90</button>
+			<button type="button" onclick="changeEditChar('91');"><br>91</button>
+			<button type="button" onclick="changeEditChar('92');"><br>92</button>
+			<button type="button" onclick="changeEditChar('93');"><br>93</button>
+			<button type="button" onclick="changeEditChar('94');"><br>94</button>
+			<button type="button" onclick="changeEditChar('95');"><br>95</button>
+			<button type="button" onclick="changeEditChar('96');"><br>96</button>
+			<button type="button" onclick="changeEditChar('97');"><br>97</button>
+			<button type="button" onclick="changeEditChar('98');"><br>98</button>
+			<button type="button" onclick="changeEditChar('99');"><br>99</button>
+			<button type="button" onclick="changeEditChar('9A');"><br>9A</button>
+			<button type="button" onclick="changeEditChar('9B');"><br>9B</button>
+			<button type="button" onclick="changeEditChar('9C');"><br>9C</button>
+			<button type="button" onclick="changeEditChar('9D');"><br>9D</button>
+			<button type="button" onclick="changeEditChar('9E');"><br>9E</button>
+			<button type="button" onclick="changeEditChar('9F');"><br>9F</button>
+			<br>
+			<button type="button" onclick="changeEditChar('A0');"><br>A0</button>
+			<button type="button" onclick="changeEditChar('A1');"><br>A1</button>
+			<button type="button" onclick="changeEditChar('A2');"><br>A2</button>
+			<button type="button" onclick="changeEditChar('A3');"><br>A3</button>
+			<button type="button" onclick="changeEditChar('A4');"><br>A4</button>
+			<button type="button" onclick="changeEditChar('A5');"><br>A5</button>
+			<button type="button" onclick="changeEditChar('A6');"><br>A6</button>
+			<button type="button" onclick="changeEditChar('A7');"><br>A7</button>
+			<button type="button" onclick="changeEditChar('A8');"><br>A8</button>
+			<button type="button" onclick="changeEditChar('A9');"><br>A9</button>
+			<button type="button" onclick="changeEditChar('AA');"><br>AA</button>
+			<button type="button" onclick="changeEditChar('AB');"><br>AB</button>
+			<button type="button" onclick="changeEditChar('AC');"><br>AC</button>
+			<button type="button" onclick="changeEditChar('AD');"><br>AD</button>
+			<button type="button" onclick="changeEditChar('AE');"><br>AE</button>
+			<button type="button" onclick="changeEditChar('AF');"><br>AF</button>
+			<br>
+			<button type="button" onclick="changeEditChar('B0');"><br>B0</button>
+			<button type="button" onclick="changeEditChar('B1');"><br>B1</button>
+			<button type="button" onclick="changeEditChar('B2');"><br>B2</button>
+			<button type="button" onclick="changeEditChar('B3');"><br>B3</button>
+			<button type="button" onclick="changeEditChar('B4');"><br>B4</button>
+			<button type="button" onclick="changeEditChar('B5');"><br>B5</button>
+			<button type="button" onclick="changeEditChar('B6');"><br>B6</button>
+			<button type="button" onclick="changeEditChar('B7');"><br>B7</button>
+			<button type="button" onclick="changeEditChar('B8');"><br>B8</button>
+			<button type="button" onclick="changeEditChar('B9');"><br>B9</button>
+			<button type="button" onclick="changeEditChar('BA');"><br>BA</button>
+			<button type="button" onclick="changeEditChar('BB');"><br>BB</button>
+			<button type="button" onclick="changeEditChar('BC');"><br>BC</button>
+			<button type="button" onclick="changeEditChar('BD');"><br>BD</button>
+			<button type="button" onclick="changeEditChar('BE');"><br>BE</button>
+			<button type="button" onclick="changeEditChar('BF');"><br>BF</button>
+			<br>
+			<button type="button" onclick="changeEditChar('C0');"><br>C0</button>
+			<button type="button" onclick="changeEditChar('C1');"><br>C1</button>
+			<button type="button" onclick="changeEditChar('C2');"><br>C2</button>
+			<button type="button" onclick="changeEditChar('C3');"><br>C3</button>
+			<button type="button" onclick="changeEditChar('C4');"><br>C4</button>
+			<button type="button" onclick="changeEditChar('C5');"><br>C5</button>
+			<button type="button" onclick="changeEditChar('C6');"><br>C6</button>
+			<button type="button" onclick="changeEditChar('C7');"><br>C7</button>
+			<button type="button" onclick="changeEditChar('C8');"><br>C8</button>
+			<button type="button" onclick="changeEditChar('C9');"><br>C9</button>
+			<button type="button" onclick="changeEditChar('CA');"><br>CA</button>
+			<button type="button" onclick="changeEditChar('CB');"><br>CB</button>
+			<button type="button" onclick="changeEditChar('CC');"><br>CC</button>
+			<button type="button" onclick="changeEditChar('CD');"><br>CD</button>
+			<button type="button" onclick="changeEditChar('CE');"><br>CE</button>
+			<button type="button" onclick="changeEditChar('CF');"><br>CF</button>
+			<br>
+			<button type="button" onclick="changeEditChar('D0');"><br>D0</button>
+			<button type="button" onclick="changeEditChar('D1');"><br>D1</button>
+			<button type="button" onclick="changeEditChar('D2');"><br>D2</button>
+			<button type="button" onclick="changeEditChar('D3');"><br>D3</button>
+			<button type="button" onclick="changeEditChar('D4');"><br>D4</button>
+			<button type="button" onclick="changeEditChar('D5');"><br>D5</button>
+			<button type="button" onclick="changeEditChar('D6');"><br>D6</button>
+			<button type="button" onclick="changeEditChar('D7');"><br>D7</button>
+			<button type="button" onclick="changeEditChar('D8');"><br>D8</button>
+			<button type="button" onclick="changeEditChar('D9');"><br>D9</button>
+			<button type="button" onclick="changeEditChar('DA');"><br>DA</button>
+			<button type="button" onclick="changeEditChar('DB');"><br>DB</button>
+			<button type="button" onclick="changeEditChar('DC');"><br>DC</button>
+			<button type="button" onclick="changeEditChar('DD');"><br>DD</button>
+			<button type="button" onclick="changeEditChar('DE');"><br>DE</button>
+			<button type="button" onclick="changeEditChar('DF');"><br>DF</button>
+			<br>
+			<button type="button" onclick="changeEditChar('E0');"><br>E0</button>
+			<button type="button" onclick="changeEditChar('E1');"><br>E1</button>
+			<button type="button" onclick="changeEditChar('E2');"><br>E2</button>
+			<button type="button" onclick="changeEditChar('E3');"><br>E3</button>
+			<button type="button" onclick="changeEditChar('E4');"><br>E4</button>
+			<button type="button" onclick="changeEditChar('E5');"><br>E5</button>
+			<button type="button" onclick="changeEditChar('E6');"><br>E6</button>
+			<button type="button" onclick="changeEditChar('E7');"><br>E7</button>
+			<button type="button" onclick="changeEditChar('E8');"><br>E8</button>
+			<button type="button" onclick="changeEditChar('E9');"><br>E9</button>
+			<button type="button" onclick="changeEditChar('EA');"><br>EA</button>
+			<button type="button" onclick="changeEditChar('EB');"><br>EB</button>
+			<button type="button" onclick="changeEditChar('EC');"><br>EC</button>
+			<button type="button" onclick="changeEditChar('ED');"><br>ED</button>
+			<button type="button" onclick="changeEditChar('EE');"><br>EE</button>
+			<button type="button" onclick="changeEditChar('EF');"><br>EF</button>
+			<br>
+			<button type="button" onclick="changeEditChar('F0');"><br>F0</button>
+			<button type="button" onclick="changeEditChar('F1');"><br>F1</button>
+			<button type="button" onclick="changeEditChar('F2');"><br>F2</button>
+			<button type="button" onclick="changeEditChar('F3');"><br>F3</button>
+			<button type="button" onclick="changeEditChar('F4');"><br>F4</button>
+			<button type="button" onclick="changeEditChar('F5');"><br>F5</button>
+			<button type="button" onclick="changeEditChar('F6');"><br>F6</button>
+			<button type="button" onclick="changeEditChar('F7');"><br>F7</button>
+			<button type="button" onclick="changeEditChar('F8');"><br>F8</button>
+			<button type="button" onclick="changeEditChar('F9');"><br>F9</button>
+			<button type="button" onclick="changeEditChar('FA');"><br>FA</button>
+			<button type="button" onclick="changeEditChar('FB');"><br>FB</button>
+			<button type="button" onclick="changeEditChar('FC');"><br>FC</button>
+			<button type="button" onclick="changeEditChar('FD');"><br>FD</button>
+			<button type="button" onclick="changeEditChar('FE');"><br>FE</button>
+			<button type="button" onclick="changeEditChar('FF');"><br>FF</button>
+		</aside>
 	</body>
 </html>
