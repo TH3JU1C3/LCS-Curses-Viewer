@@ -444,8 +444,18 @@ function changeBGround(colour) {
 }
 
 function changeBright(bool) {
-	if (bool === 0 ||bool === 1) {
+	if (bool === 0 || bool === 1) {
 		editBright = bool;
 	}
 	return;
+}
+
+function toggleBright() {
+	console.log("Nae NAe");
+	if (editBright === 0) {
+		editBright = 1;
+	}
+	if (editBright === 1) {
+		editBright = 0;
+	}
 }
