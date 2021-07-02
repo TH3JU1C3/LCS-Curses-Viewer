@@ -140,6 +140,7 @@ function editing() {
 	else {
 		editMode = true;
 		showCursor();
+		showCharacterEdit("hover");
 	}
 	const dimx = readBytes(4,4);
 	const dimy = readBytes(8,4);
@@ -180,6 +181,7 @@ function editing() {
 		}
 		//Time.sleep(20);
 		console.log(editingCell);
+		showCharacterEdit("hover");
 	})
 }
 
@@ -426,6 +428,7 @@ function changeEditChar(HexNum) {
 	if (charNum >= 0 && charNum <= 255) {
 		editChar = charNum;
 	}
+	showCharacterEdit("overwrite");
 	return;
 }
 
@@ -433,6 +436,7 @@ function changeFGround(colour) {
 	if (colour >= 0 && colour <= 7) {
 		editFGroundC = colour;
 	}
+	showCharacterEdit("overwrite");
 	return;
 }
 
@@ -440,6 +444,7 @@ function changeBGround(colour) {
 	if (colour >= 0 && colour <= 7) {
 		editBGroundC = colour;
 	}
+	showCharacterEdit("overwrite");
 	return;
 }
 
@@ -447,15 +452,71 @@ function changeBright(bool) {
 	if (bool === 0 || bool === 1) {
 		editBright = bool;
 	}
+	showCharacterEdit("overwrite");
 	return;
 }
 
-function toggleBright() {
-	console.log("Nae NAe");
-	if (editBright === 0) {
-		editBright = 1;
+function showCharacterEdit(type) {
+	const dimy = readBytes(8,4);
+	//const hoverChar = document.getElementById("hover-char");
+	//const overwriteChar = document.getElementById("overwrite-char");
+	const charac = {"hover":document.getElementById("hover-char"), "overwrite":overwriteChar = document.getElementById("overwrite-char")};
+	
+	// colors are black,blue,green,cyan,red,purple,yellow,white and then bright versions respectively
+	const colours = ["#0C0C0C","#0037DA","#13A10E","#3A96DD","#C50F1F","#881798","#C19C00","#CCCCCC"];
+	const brightColours = ["#767676","#3B78FF","#16C60C","#61D6D6","#E74856","#B4009E","#F9F1A5","#F2F2F2"];
+	
+	let chr = null;
+	let bright = null;
+	let fColour = null;
+	let bColour = null;
+	
+	if (type === "hover") {
+		chr = pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
+		if (chr == 32) {
+			chr = "SP";
+		}
+		else if (chr == 0) {
+			chr = "\\0";
+		}
+		else {
+			chr = convert437ToUTF(chr);
+		}
+		
+		if (pictures[frameNum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4] == 0) {
+			bright = false;
+		}
+		else {
+			bright = true;
+		}
+		
+		fColour = pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
+		bColour = pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
 	}
-	if (editBright === 1) {
-		editBright = 0;
+	else {
+		chr = editChar;
+		if (chr == 32) {
+			chr = "SP";
+		}
+		else if (chr == 0) {
+			chr = "\\0";
+		}
+		else {
+			chr = convert437ToUTF(chr);
+		}
+		
+		fColour = editFGroundC;
+		bColour = editBGroundC;
+		bright = Boolean(editBright);
 	}
+	
+	
+	charac[type].innerHTML = "&#"+chr+";";
+	if (bright) {
+		charac[type].style.color = brightColours[fColour];
+	}
+	else {
+		charac[type].style.color = colours[fColour];
+	}
+	charac[type].style.border = "3px solid " + colours[bColour];
 }

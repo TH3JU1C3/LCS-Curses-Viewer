@@ -48,6 +48,12 @@
 			.dropdown:hover .dropdown-content {
 				display: block;
 			}
+			
+			#hover-char, #overwrite-char {
+				color: #0C0C0C;
+				border: 3px solid #CCCCCC;
+				display: inline-block;
+			}
 		</style>
 	</head>
 	<body>
@@ -62,7 +68,6 @@
 		<button type="button" onclick="toggleYs();">Absolute Cell View</button>
 		<br>
 		<canvas id="movieScreen" width="640px", height="625px"></canvas>
-		<script src="viewerScript.js"></script>
 		<img src="example.png"></img>
 		
 		<aside>
@@ -341,11 +346,11 @@
 		<section id="info-panel">
 			<p>
 				Selected Character: <br>
-				<big id="hover-char"> X </big>
+				<big id="hover-char"> &#\0; </big>
 			</p>
 			<p>
 				Overwriting with: <br>
-				<big id="overwrite-char"> a </big>
+				<big id="overwrite-char"> &#\0; </big>
 			</p>
 			<div class = "dropdown">
 				<button>Change Fground</button>
@@ -377,5 +382,6 @@
 			<button type="button" onclick="changeBright(1);">Set Bright Foreground</button>
 			<button type="button" onclick="changeBright(0);">Unset Bright Foreground</button>
 		</section>
+		<script src="viewerScript.js"></script>
 	</body>
 </html>
