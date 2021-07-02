@@ -473,15 +473,8 @@ function showCharacterEdit(type) {
 	
 	if (type === "hover") {
 		chr = pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
-		if (chr == 32) {
-			chr = "SP";
-		}
-		else if (chr == 0) {
-			chr = "\\0";
-		}
-		else {
-			chr = convert437ToUTF(chr);
-		}
+		fColour = pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
+		bColour = pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
 		
 		if (pictures[frameNum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4] == 0) {
 			bright = false;
@@ -489,27 +482,23 @@ function showCharacterEdit(type) {
 		else {
 			bright = true;
 		}
-		
-		fColour = pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
-		bColour = pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
 	}
 	else {
 		chr = editChar;
-		if (chr == 32) {
-			chr = "SP";
-		}
-		else if (chr == 0) {
-			chr = "\\0";
-		}
-		else {
-			chr = convert437ToUTF(chr);
-		}
-		
 		fColour = editFGroundC;
 		bColour = editBGroundC;
 		bright = Boolean(editBright);
 	}
 	
+	if (chr == 32) {
+		chr = "SP";
+	}
+	else if (chr == 0) {
+		chr = "\\0";
+	}
+	else {
+		chr = convert437ToUTF(chr);
+	}
 	
 	charac[type].innerHTML = "&#"+chr+";";
 	if (bright) {
