@@ -9,6 +9,9 @@ let editChar = 0;
 let editFGroundC = 0;
 let editBGroundC = 7;
 let editBright = 0;
+let picnum = null;
+let dimx = null;
+let dimy = null;
 const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -59,9 +62,9 @@ function readBytes(index,size) {
 }
 
 function readPictures() {
-	const picnum = readBytes(0,4);
-	const dimx = readBytes(4,4);
-	const dimy = readBytes(8,4);
+	picnum = readBytes(0,4);
+	dimx = readBytes(4,4);
+	dimy = readBytes(8,4);
 	const pictureBlockSize = dimx*dimy;
 	let dword = 0;
 	let dword4 = dword*4;
@@ -87,8 +90,6 @@ function readPictures() {
 }
 
 function displayPicture() {
-	const dimx = readBytes(4,4);
-	const dimy = readBytes(8,4);
 	let picture = pictures[frameNum];
 	
 	ctx.font = "16px Consolas";
@@ -142,8 +143,7 @@ function editing() {
 		showCursor();
 		showCharacterEdit("hover");
 	}
-	const dimx = readBytes(4,4);
-	const dimy = readBytes(8,4);
+	
 	document.addEventListener("keydown", event => {
 		displayPicture();
 		switch (event.keyCode) {
@@ -188,7 +188,7 @@ function editing() {
 function incrementFrameNumAndDisplay() {
 	resetted = false;
 	frameNum++;
-	if (frameNum >= data[0]) {
+	if (frameNum >= picnum) {
 		frameNum = 0;
 		resetted = true;
 	}
@@ -201,7 +201,7 @@ function decrementFrameNumAndDisplay() {
 	resetted = false;
 	frameNum--;
 	if (frameNum < 0) {
-		frameNum = data[0]-1;
+		frameNum = picnum-1;
 		resetted = true;
 	}
 	displayPicture();
@@ -457,7 +457,6 @@ function changeBright(bool) {
 }
 
 function showCharacterEdit(type) {
-	const dimy = readBytes(8,4);
 	//const hoverChar = document.getElementById("hover-char");
 	//const overwriteChar = document.getElementById("overwrite-char");
 	const charac = {"hover":document.getElementById("hover-char"), "overwrite":overwriteChar = document.getElementById("overwrite-char")};
@@ -475,13 +474,7 @@ function showCharacterEdit(type) {
 		chr = pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
 		fColour = pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
 		bColour = pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
-		
-		if (pictures[frameNum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4] == 0) {
-			bright = false;
-		}
-		else {
-			bright = true;
-		}
+		bright = Boolean(pictures[frameNum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4]);
 	}
 	else {
 		chr = editChar;
@@ -508,4 +501,13 @@ function showCharacterEdit(type) {
 		charac[type].style.color = colours[fColour];
 	}
 	charac[type].style.border = "3px solid " + colours[bColour];
+}
+
+function dlJSON(fname) { //Courtesy of https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser#30800715
+	let obj = {"picture_number":picnum, "dimx": dimx, "dimy":dimy, "pictures":pictures};
+	let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+	let dlAnchorElem = document.getElementById('downloadAnchorElem');
+	dlAnchorElem.setAttribute("href",     dataStr     );
+	dlAnchorElem.setAttribute("download", fname);
+	dlAnchorElem.click();
 }
