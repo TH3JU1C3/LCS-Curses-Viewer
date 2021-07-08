@@ -134,8 +134,7 @@ function showCursor() {
 	let x = editingCell["x"];
 	let y = editingCell["y"];
 	ctx.fillStyle = cursorColour;
-	ctx.fillRect(x*8,y*ys,8,ys);
-	console.log(x*8,y*ys,(x+1)*8,(y+1)*ys);
+	ctx.fillRect(x*8,y*19,8,19);
 }
 
 function editing() {
