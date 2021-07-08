@@ -2,7 +2,6 @@ let data = [];
 let pictures = [];
 let frameNum = 0;
 let lastTime = 0;
-let ys = 19;
 let editingCell = {"x":0,"y":0};
 let editMode = false;
 let editChar = 0;
@@ -116,9 +115,14 @@ function displayPicture() {
 				bright = false;
 			}
 			ctx.fillStyle = bColour;
-			ctx.fillRect(x*8,y*ys,8,ys);
+			ctx.fillRect(x*8,y*19,8,19);
 			ctx.fillStyle = fColour;
-			ctx.fillText(charac,x*8,((y+1)*ys)-4,8,ys);
+			if (picture[i] < 176 || picture[i] > 178) {
+				ctx.fillText(charac,x*8,((y+1)*19)-4,8);
+			}
+			else { // Make shaded block characters (char B0, B1, B2) appear lower so that their bottom gets overwritten and they aren't so tall
+				ctx.fillText(charac,x*8,((y+1)*19)+4,8);
+			}
 			i += 4;
 		}
 	}
