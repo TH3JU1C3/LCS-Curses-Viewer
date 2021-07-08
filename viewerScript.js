@@ -237,19 +237,6 @@ function playCMV(timestamp) {
 }
 */
 
-function toggleYs() {
-	if (ys === 19) {
-		ys = 25;
-		//canvas.height = "625px";
-	}
-	else {
-		ys = 19;
-		//canvas.height = "475px";
-	}
-	clearCanvas();
-	displayPicture();
-}
-
 function clearCanvas() {
 	ctx.fillStyle = "white";
 	ctx.fillRect(0,0,canvasWidth,canvasHeight);
