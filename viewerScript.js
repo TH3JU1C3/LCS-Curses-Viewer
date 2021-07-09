@@ -115,13 +115,13 @@ function displayPicture() {
 				bright = false;
 			}
 			ctx.fillStyle = bColour;
-			ctx.fillRect(x*8,y*19,8,19);
+			ctx.fillRect(x*8,y*16,8,16);
 			ctx.fillStyle = fColour;
 			if (picture[i] < 176 || picture[i] > 178) {
-				ctx.fillText(charac,x*8,((y+1)*19)-4,8);
+				ctx.fillText(charac,x*8,((y+1)*16)-1,8);
 			}
 			else { // Make shaded block characters (char B0, B1, B2) appear lower so that their bottom gets overwritten and they aren't so tall
-				ctx.fillText(charac,x*8,((y+1)*19)+4,8);
+				ctx.fillText(charac,x*8,((y+1)*16)+6,8);
 			}
 			i += 4;
 		}
@@ -134,7 +134,7 @@ function showCursor() {
 	let x = editingCell["x"];
 	let y = editingCell["y"];
 	ctx.fillStyle = cursorColour;
-	ctx.fillRect(x*8,y*19,8,19);
+	ctx.fillRect(x*8,y*16,8,16);
 }
 
 function editing() {

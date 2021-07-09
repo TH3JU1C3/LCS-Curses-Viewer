@@ -3,58 +3,7 @@
 	<head>
 		<title>LCS CPC Viewer</title>
 		<meta charset="utf-8">
-		<style>
-			canvas {
-				border: 1px solid black;
-				font-size: 20px;
-			}
-			aside {
-				height: 625px; /* or any value */
-				overflow-y: auto;
-				width: 40%;
-				float: right;
-			}
-			aside > button {
-				width: 30px;
-			}
-			img {
-				display: none;
-			}
-			#info-panel {
-				display: inline-block;
-				float: inline-end;
-				width: 17%;
-				height: 400px;
-				border: 1px solid black;
-			}
-			#info-panel > p {
-				text-align: center;
-			}
-			#info-panel > p > big{
-				font-size: 30px
-			}
-			
-			.dropdown {
-				display: inline-block;
-				position: relative;
-			}
-			.dropdown-content {
-				display: none;
-				position: absolute;
-				width: 100%;
-				overflow: auto;
-				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-			}
-			.dropdown:hover .dropdown-content {
-				display: block;
-			}
-			
-			#hover-char, #overwrite-char {
-				color: #0C0C0C;
-				border: 3px solid #CCCCCC;
-				display: inline-block;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="Style.css">
 	</head>
 	<body>
 		<p id="FrameDisplayer">
@@ -67,7 +16,7 @@
 		<button type="button" onclick="editing();">Edit</button>
 		<button type="button" onclick="dlJSON('Temp_CPC.json');">Save JSON</button>
 		<br>
-		<canvas id="movieScreen" width="640px", height="475px"></canvas>
+		<canvas id="movieScreen" width="640px", height="400px"></canvas>
 		<img src="example.png"></img>
 		
 		<aside>
