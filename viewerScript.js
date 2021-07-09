@@ -501,3 +501,16 @@ function dlJSON(fname) { //Courtesy of https://stackoverflow.com/questions/19721
 	dlAnchorElem.setAttribute("download", fname);
 	dlAnchorElem.click();
 }
+
+function addNewPicture() {
+	picnum++;
+	let picture = [];
+	for (let x = 0; x < dimx && x < 80; x++) {
+		for (let y = 0; y < dimy && y < 25; y++) {
+			for (let i = 0; i < 4; i++) {
+				picture.push(0);
+			}
+		}
+	}
+	pictures.push(picture);
+}

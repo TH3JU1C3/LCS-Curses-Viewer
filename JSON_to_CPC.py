@@ -1,6 +1,6 @@
 import json
 
-fname = input("Input the filename (generally \"Temp_CPC.json\"")
+fname = input("Input the filename (generally \"Temp_CPC.json\"): ")
 jsonfile = open(fname, "rt")
 jsn = json.load(jsonfile)
 jsonfile.close()
@@ -14,7 +14,7 @@ for picture in jsn["pictures"]:
 	for char in picture:
 		cpcString += chr(char)
 
-fname = input("Input the filename for output (include .cpc)")
+fname = input("Input the filename for output (include .cpc): ")
 file = open(fname,"wt")
 file.write(cpcString)
 file.close()
