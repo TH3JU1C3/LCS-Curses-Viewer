@@ -1,5 +1,6 @@
 let data = [];
 let pictures = [];
+let frameSet = [];
 let frameNum = 0;
 let lastTime = 0;
 let editingCell = {"x":0,"y":0};
@@ -11,6 +12,7 @@ let editBright = 0;
 let picnum = null;
 let dimx = null;
 let dimy = null;
+let dummySize = null;
 const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -22,7 +24,7 @@ class Frame {
 	}
 }
 
-function readFile() {
+function readFile(type) {
 	data = [];
 	let files = document.getElementById('uploader').files;
 	console.log(files);
@@ -39,6 +41,9 @@ function readFile() {
 			data.push(x.charCodeAt(i));
 		}
 		pictures = readPictures();
+		if (type === "CMV") {
+			dummy = getDummyData();
+		}
 		console.log(data);
 		resetFrame();
 		clearCanvas();
@@ -88,45 +93,65 @@ function readPictures() {
 	return pictures;
 }
 
+function getDummyData() {
+	const dummyStartByte = 12 + dimx*dimy*picnum;
+	dummySize = readBytes(dummyStartByte,4);
+	console.log(dummySize);
+	let i = 4;
+	for (let f = 0; f < dummySize; f++) {
+		let Frame = {"frame":null, "start":null, "stop":null, "sound":null, "song":null, "effect":null, "flag":null};
+		Frame.frame = readBytes(dummyStartByte + i,2);
+		i += 2;
+		Frame.start = readBytes(dummyStartByte + i,4);
+		i += 4;
+		Frame.stop = readBytes(dummyStartByte + i,4);
+		i += 4;
+		Frame.sound = readBytes(dummyStartByte + i,2);
+		i += 2;
+		Frame.song = readBytes(dummyStartByte + i,2);
+		i += 2;
+		Frame.effect = readBytes(dummyStartByte + i,2);
+		i += 2;
+		Frame.flag = readBytes(dummyStartByte + i,2);
+		i += 2;
+		frameSet.push(Frame);
+	}
+}
+
 function displayPicture() {
 	let picture = pictures[frameNum];
-	
-	ctx.font = "16px Consolas";
-	ctx.fillStyle = "#CCCCCC";
-	// colors are black,blue,green,cyan,red,purple,yellow,white and then bright versions respectively
-	let colours = ["#0C0C0C","#0037DA","#13A10E","#3A96DD","#C50F1F","#881798","#C19C00","#CCCCCC"];
-	let brightColours = ["#767676","#3B78FF","#16C60C","#61D6D6","#E74856","#B4009E","#F9F1A5","#F2F2F2"];
-	let bright = false;
-	let bColour = colours[0];
-	let fColour = colours[7];
-	let charac = "";
-	
 	let i = 0;
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
-			charac = String.fromCharCode(convert437ToUTF(picture[i]));
-			fColour = colours[picture[i+1]];
-			bColour = colours[picture[i+2]];
-			if (picture[i+3] == 1) {
-				bright = true;
-				fColour = brightColours[picture[i+1]];
-			}
-			else {
-				bright = false;
-			}
-			ctx.fillStyle = bColour;
-			ctx.fillRect(x*8,y*16,8,16);
-			ctx.fillStyle = fColour;
-			if (picture[i] < 176 || picture[i] > 178) {
-				ctx.fillText(charac,x*8,((y+1)*16)-1,8);
-			}
-			else { // Make shaded block characters (char B0, B1, B2) appear lower so that their bottom gets overwritten and they aren't so tall
-				ctx.fillText(charac,x*8,((y+1)*16)+6,8);
-			}
+			displayCharacter(picture.slice(i,i+4),x,y);
 			i += 4;
 		}
 	}
-	console.log("G");
+}
+
+function displayCharacter(characterData,x,y) {
+	ctx.font = "16px Consolas";
+	// colors are black,blue,green,cyan,red,purple,yellow,white and then bright versions respectively
+	const colours = ["#0C0C0C","#0037DA","#13A10E","#3A96DD","#C50F1F","#881798","#C19C00","#CCCCCC"];
+	const brightColours = ["#767676","#3B78FF","#16C60C","#61D6D6","#E74856","#B4009E","#F9F1A5","#F2F2F2"];
+	
+	let charac = String.fromCharCode(convert437ToUTF(characterData[0]));
+	let fColour = colours[characterData[1]];
+	let bColour = colours[characterData[2]];
+	let bright = Boolean(characterData[3]);
+	if (bright) {
+		fColour = brightColours[characterData[1]];
+	}
+	
+	ctx.fillStyle = bColour;
+	ctx.fillRect(x*8,y*16,8,16);
+	ctx.fillStyle = fColour;
+	if (characterData[0] < 176 || characterData[0] > 178) {
+		ctx.fillText(charac,x*8,((y+1)*16)-1,8);
+	}
+	else { // Make shaded block characters (char B0, B1, B2) appear lower so that their bottom gets overwritten and they aren't so tall
+		ctx.fillText(charac,x*8,((y+1)*16)+6,8);
+	}
 }
 
 function showCursor() {
