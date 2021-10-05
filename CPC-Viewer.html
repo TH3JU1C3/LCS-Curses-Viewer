@@ -6,13 +6,13 @@
 		<link rel="stylesheet" type="text/css" href="Style.css">
 	</head>
 	<body>
-		<p id="FrameDisplayer">
-			Current Frame: 
+		<p id="PicNumDisplayer">
+			Current Image: 
 		</p>
 		<input  type="file" id="uploader" value="Import" accept=".cpc" />
 		<button type="button" onclick="readFile('CPC');">Upload File</button>
-		<button type="button" onclick="incrementFrameNumAndDisplay();">Next Image</button>
-		<button type="button" onclick="decrementFrameNumAndDisplay();">Prev Image</button>
+		<button type="button" onclick="incrementPicNumAndDisplay();">Next Image</button>
+		<button type="button" onclick="decrementPicNumAndDisplay();">Prev Image</button>
 		<button type="button" onclick="editing();">Edit</button>
 		<button type="button" onclick="dlJSON('Temp_CPC.json');">Save JSON</button>
 		<br>

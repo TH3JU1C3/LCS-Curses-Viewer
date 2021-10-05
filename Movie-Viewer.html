@@ -6,11 +6,13 @@
 		<link rel="stylesheet" type="text/css" href="Style.css">
 	</head>
 	<body>
-		<p id="FrameDisplayer">
-			Current Frame: 
+		<p id="PicNumDisplayer">
+			Current Image: 
 		</p>
 		<input  type="file" id="uploader" value="Import" accept=".cmv" />
 		<button type="button" onclick="readFile('CMV');">Upload File</button>
+		<button type="button" onclick="incrementPicNumAndDisplay();">Next Picture</button>
+		<button type="button" onclick="decrementPicNumAndDisplay();">Prev Picture</button>
 		<button type="button" onclick="incrementFrameNumAndDisplay();">Next Frame</button>
 		<button type="button" onclick="decrementFrameNumAndDisplay();">Prev Frame</button>
 		<button type="button" onclick="editing();">Edit</button>

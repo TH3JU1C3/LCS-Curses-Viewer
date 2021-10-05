@@ -1,7 +1,8 @@
 let data = [];
 let pictures = [];
 let frameSet = [];
-let frameNum = 0;
+let picnum = 0;
+let framenum = 0;
 let lastTime = 0;
 let editingCell = {"x":0,"y":0};
 let editMode = false;
@@ -9,7 +10,7 @@ let editChar = 0;
 let editFGroundC = 0;
 let editBGroundC = 7;
 let editBright = 0;
-let picnum = null;
+let picnummax = null;
 let dimx = null;
 let dimy = null;
 let dummySize = null;
@@ -17,12 +18,6 @@ const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 const ctx = canvas.getContext("2d");
-
-class Frame {
-	constructor(dat,) {
-		
-	}
-}
 
 function readFile(type) {
 	data = [];
@@ -42,10 +37,10 @@ function readFile(type) {
 		}
 		pictures = readPictures();
 		if (type === "CMV") {
-			dummy = getDummyData();
+			getDummyData();
 		}
 		console.log(data);
-		resetFrame();
+		resetPicNum();
 		clearCanvas();
 		displayPicture();
 	}
@@ -66,7 +61,7 @@ function readBytes(index,size) {
 }
 
 function readPictures() {
-	picnum = readBytes(0,4);
+	picnummax = readBytes(0,4);
 	dimx = readBytes(4,4);
 	dimy = readBytes(8,4);
 	const pictureBlockSize = dimx*dimy;
@@ -74,7 +69,7 @@ function readPictures() {
 	let dword4 = dword*4;
 	let pictures = [];
 	let picture = [];
-	for (let i = 0; i < picnum; i++) {
+	for (let i = 0; i < picnummax; i++) {
 		dword = 3 + (i * pictureBlockSize);
 		dword4 = dword*4;
 		for (let x = 0; x < dimx && x < 80; x++) {
@@ -94,13 +89,14 @@ function readPictures() {
 }
 
 function getDummyData() {
-	const dummyStartByte = 12 + dimx*dimy*picnum;
+	const dummyStartByte = 12 + dimx*dimy*picnummax*4;
+	console.log(dummyStartByte);
 	dummySize = readBytes(dummyStartByte,4);
 	console.log(dummySize);
 	let i = 4;
 	for (let f = 0; f < dummySize; f++) {
-		let Frame = {"frame":null, "start":null, "stop":null, "sound":null, "song":null, "effect":null, "flag":null};
-		Frame.frame = readBytes(dummyStartByte + i,2);
+		let Frame = {"picture":null, "start":null, "stop":null, "sound":null, "song":null, "effect":null, "flag":null};
+		Frame.picture = readBytes(dummyStartByte + i,2);
 		i += 2;
 		Frame.start = readBytes(dummyStartByte + i,4);
 		i += 4;
@@ -115,14 +111,37 @@ function getDummyData() {
 		Frame.flag = readBytes(dummyStartByte + i,2);
 		i += 2;
 		frameSet.push(Frame);
+		console.log("PPMSD");
 	}
 }
 
 function displayPicture() {
-	let picture = pictures[frameNum];
+	let picture = pictures[picnum];
 	let i = 0;
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
+			displayCharacter(picture.slice(i,i+4),x,y);
+			i += 4;
+		}
+	}
+}
+
+finalframe = 0;
+
+function displayFrame() {
+	if (framenum === 0) {
+		ctx.fillStyle = "#0C0C0C";
+		ctx.fillRect(0,0,640,400);
+	}
+	let picture = pictures[frameSet[framenum].picture];
+	let i = 0;
+	for (let x = 0; x < dimx && x < 80; x++) {
+		for (let y = 0; y < dimy && y < 25; y++) {
+			if ((picture[i] == 0 || picture[i] == 32) &&
+			frameSet[framenum].flag == 1) {
+				i += 4;
+				continue;
+			}
 			displayCharacter(picture.slice(i,i+4),x,y);
 			i += 4;
 		}
@@ -176,10 +195,10 @@ function editing() {
 		displayPicture();
 		switch (event.keyCode) {
 			case 32: // Space
-				pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editChar;
-				pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editFGroundC;
-				pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editBGroundC;
-				pictures[frameNum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editBright;
+				pictures[picnum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editChar;
+				pictures[picnum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editFGroundC;
+				pictures[picnum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editBGroundC;
+				pictures[picnum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4] = editBright;
 				displayPicture();
 				break;
 			case 37: // Left
@@ -215,35 +234,60 @@ function editing() {
 
 function incrementFrameNumAndDisplay() {
 	resetted = false;
-	frameNum++;
-	if (frameNum >= picnum) {
-		frameNum = 0;
+	framenum++;
+	if (framenum >= dummySize) {
+		framenum = 0;
 		resetted = true;
 	}
-	displayPicture();
-	displayFrameNum();
+	displayFrame();
+	//displayPicNum();
 	return resetted;
 }
 
 function decrementFrameNumAndDisplay() {
 	resetted = false;
-	frameNum--;
-	if (frameNum < 0) {
-		frameNum = picnum-1;
+	framenum--;
+	if (framenum < 0) {
+		framenum = dummySize-1;
 		resetted = true;
 	}
-	displayPicture();
-	displayFrameNum();
+	displayFrame();
+	//displayPicNum();
 	return resetted;
 }
 
-function resetFrame() {
-	frameNum = 0;
-	displayFrameNum();
+
+function incrementPicNumAndDisplay() {
+	resetted = false;
+	picnum++;
+	if (picnum >= picnummax) {
+		picnum = 0;
+		resetted = true;
+	}
+	displayPicture();
+	displayPicNum();
+	return resetted;
 }
 
-function displayFrameNum() {
-	document.getElementById("FrameDisplayer").innerHTML = "Current Frame: " + frameNum;
+function decrementPicNumAndDisplay() {
+	resetted = false;
+	picnum--;
+	if (picnum < 0) {
+		picnum = picnummax-1;
+		resetted = true;
+	}
+	displayPicture();
+	displayPicNum();
+	return resetted;
+}
+
+function resetPicNum() {
+	picnum = 0;
+	displayPicNum();
+}
+
+function displayPicNum() {
+	document.getElementById("PicNumDisplayer").innerHTML = "Current Image: " + picnum;
 }
 
 /*
@@ -486,10 +530,10 @@ function showCharacterEdit(type) {
 	let bColour = null;
 	
 	if (type === "hover") {
-		chr = pictures[frameNum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
-		fColour = pictures[frameNum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
-		bColour = pictures[frameNum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
-		bright = Boolean(pictures[frameNum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4]);
+		chr = pictures[picnum][0 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
+		fColour = pictures[picnum][1 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
+		bColour = pictures[picnum][2 + (editingCell["y"] + editingCell["x"]*dimy) * 4];
+		bright = Boolean(pictures[picnum][3 + (editingCell["y"] + editingCell["x"]*dimy) * 4]);
 	}
 	else {
 		chr = editChar;
@@ -519,7 +563,7 @@ function showCharacterEdit(type) {
 }
 
 function dlJSON(fname) { //Courtesy of https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser#30800715
-	let obj = {"picture_number":picnum, "dimx": dimx, "dimy":dimy, "pictures":pictures};
+	let obj = {"picture_number":picnummax, "dimx": dimx, "dimy":dimy, "pictures":pictures};
 	let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
 	let dlAnchorElem = document.getElementById('downloadAnchorElem');
 	dlAnchorElem.setAttribute("href",     dataStr     );
@@ -528,7 +572,7 @@ function dlJSON(fname) { //Courtesy of https://stackoverflow.com/questions/19721
 }
 
 function addNewPicture() {
-	picnum++;
+	picnummax++;
 	let picture = [];
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
