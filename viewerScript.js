@@ -2,7 +2,8 @@ let data = [];
 let pictures = [];
 let frameSet = [];
 let picnum = 0;
-let framenum = 0;
+let time = -1;
+let finaltime = -1;
 let lastTime = 0;
 let editingCell = {"x":0,"y":0};
 let editMode = false;
@@ -37,7 +38,9 @@ function readFile(type) {
 		}
 		pictures = readPictures();
 		if (type === "CMV") {
+			finaltime = -1;
 			getDummyData();
+			time = -1;
 		}
 		console.log(data);
 		resetPicNum();
@@ -111,6 +114,9 @@ function getDummyData() {
 		Frame.flag = readBytes(dummyStartByte + i,2);
 		i += 2;
 		frameSet.push(Frame);
+		if (Frame.stop > finaltime) {
+			finaltime = Frame.stop;
+		}
 		console.log("PPMSD");
 	}
 }
@@ -126,25 +132,106 @@ function displayPicture() {
 	}
 }
 
-finalframe = 0;
+//let finalframe = 0;
 
 function displayFrame() {
-	if (framenum === 0) {
+	/*
+	if (false && time < 0) {
 		ctx.fillStyle = "#0C0C0C";
 		ctx.fillRect(0,0,640,400);
 	}
-	let picture = pictures[frameSet[framenum].picture];
+	let framesDisplayingAtCurrentTime = [];
+	let picture = [];
+	for (let k = 0; k < dummySize; k++) {
+		if (frameSet[k].start <= time && time <= frameSet[k].stop) {
+			framesDisplayingAtCurrentTime.push(k);
+		}
+	}
+	console.log(framesDisplayingAtCurrentTime);
+	let i = 0;
+	for (j = 0; j < framesDisplayingAtCurrentTime.length; j++) {
+
+		console.log(j);
+		if (framesDisplayingAtCurrentTime.length > 1) j = 1;
+		picture = pictures[frameSet[framesDisplayingAtCurrentTime[j]].picture];
+		console.log(picture);
+		for (let x = 0; x < dimx && x < 80; x++) {
+			for (let y = 0; y < dimy && y < 25; y++) {
+				if ((picture[i] == 0 || picture[i] == 32) && 
+				frameSet[framesDisplayingAtCurrentTime[j]].flag == 1) {
+					i += 4;
+					continue;
+				}
+				displayCharacter(picture.slice(i,i+4),x,y);
+				i += 4;
+			}
+		}
+
+		//picnum = framesDisplayingAtCurrentTime[j].picture;
+		//displayPicture();
+	}
+	*/
+	let picture = [];
+	let i = 0;
+	for (let f = 0; f < dummySize; f++) {
+		if (frameSet[f].start <= time && time <= frameSet[f].stop) {
+			picture = pictures[frameSet[f].picture];
+		}
+		for (let x = 0; x < dimx && x < 80; x++) {
+			for (let y = 0; y < dimy && y < 25; y++) {
+				if ((picture[i] == 0 || picture[i] == 32) && 
+				frameSet[f].flag == 1) {
+					i += 4;
+					continue;
+				}
+				displayCharacter(picture.slice(i,i+4),x,y);
+				i += 4;
+			}
+		}
+	}
+}
+
+function displayFramex(picIndex) {
+	let picy = [];
+	for (let p = 0; p < picIndex.length; p++) {
+		picy.push(pictures[picIndex[p]]);
+	}
+	let pictureToDisplay = [];
 	let i = 0;
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
-			if ((picture[i] == 0 || picture[i] == 32) &&
-			frameSet[framenum].flag == 1) {
-				i += 4;
-				continue;
+			for (let p = picy.length - 1; p >= 0; p--) {
+				if (p == 0 || (picy[p][i] != 0 && picy[p][i] != 32)) {
+					pictureToDisplay.push(picy[p][i]);
+					pictureToDisplay.push(picy[p][i+1]);
+					pictureToDisplay.push(picy[p][i+2]);
+					pictureToDisplay.push(picy[p][i+3]);
+					break;
+				}
 			}
-			displayCharacter(picture.slice(i,i+4),x,y);
+			displayCharacter(pictureToDisplay.slice(i,i+4),x,y);
 			i += 4;
 		}
+	}
+}
+
+function makeFrame(pics) {
+	let pictureToDisplay = [];
+	let i = 0;
+	for (let x = 0; x < dimx && x < 80; x++) {
+		for (let y = 0; y < dimy && y < 25; y++) {
+			if ((picture2[i] == 0 || picture2[i] == 32) /*&& frameSet[f].flag == 1*/) {
+				picture2[i] = picture0[i];
+				picture2[i+1] = picture0[i+1];
+				picture2[i+2] = picture0[i+2];
+				picture2[i+3] = picture0[i+3];
+			}
+			displayCharacter(picture2.slice(i,i+4),x,y);
+			i += 4;
+		}
+	}
+	for (let p = pics.length - 1; p >= 0; p--) {
+		
 	}
 }
 
@@ -231,7 +318,10 @@ function editing() {
 		showCharacterEdit("hover");
 	})
 }
-
+function increaseTime(num) {
+	time += num;
+	displayFrame();
+}
 function incrementFrameNumAndDisplay() {
 	resetted = false;
 	framenum++;
