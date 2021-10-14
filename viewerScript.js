@@ -135,73 +135,36 @@ function displayPicture() {
 //let finalframe = 0;
 
 function displayFrame() {
-	/*
-	if (false && time < 0) {
-		ctx.fillStyle = "#0C0C0C";
-		ctx.fillRect(0,0,640,400);
-	}
+
 	let framesDisplayingAtCurrentTime = [];
-	let picture = [];
 	for (let k = 0; k < dummySize; k++) {
 		if (frameSet[k].start <= time && time <= frameSet[k].stop) {
-			framesDisplayingAtCurrentTime.push(k);
+			framesDisplayingAtCurrentTime.push(frameSet[k]);
 		}
 	}
+	let picture = getPictureFromFrame(framesDisplayingAtCurrentTime);
 	console.log(framesDisplayingAtCurrentTime);
+	
 	let i = 0;
-	for (j = 0; j < framesDisplayingAtCurrentTime.length; j++) {
-
-		console.log(j);
-		if (framesDisplayingAtCurrentTime.length > 1) j = 1;
-		picture = pictures[frameSet[framesDisplayingAtCurrentTime[j]].picture];
-		console.log(picture);
-		for (let x = 0; x < dimx && x < 80; x++) {
-			for (let y = 0; y < dimy && y < 25; y++) {
-				if ((picture[i] == 0 || picture[i] == 32) && 
-				frameSet[framesDisplayingAtCurrentTime[j]].flag == 1) {
-					i += 4;
-					continue;
-				}
-				displayCharacter(picture.slice(i,i+4),x,y);
-				i += 4;
-			}
-		}
-
-		//picnum = framesDisplayingAtCurrentTime[j].picture;
-		//displayPicture();
-	}
-	*/
-	let picture = [];
-	let i = 0;
-	for (let f = 0; f < dummySize; f++) {
-		if (frameSet[f].start <= time && time <= frameSet[f].stop) {
-			picture = pictures[frameSet[f].picture];
-		}
-		for (let x = 0; x < dimx && x < 80; x++) {
-			for (let y = 0; y < dimy && y < 25; y++) {
-				if ((picture[i] == 0 || picture[i] == 32) && 
-				frameSet[f].flag == 1) {
-					i += 4;
-					continue;
-				}
-				displayCharacter(picture.slice(i,i+4),x,y);
-				i += 4;
-			}
+	for (let x = 0; x < dimx && x < 80; x++) {
+		for (let y = 0; y < dimy && y < 25; y++) {
+			displayCharacter(picture.slice(i,i+4),x,y);
+			i += 4;
 		}
 	}
 }
 
-function displayFramex(picIndex) {
+function getPictureFromFrame(FrameData) {
 	let picy = [];
-	for (let p = 0; p < picIndex.length; p++) {
-		picy.push(pictures[picIndex[p]]);
+	for (let p = 0; p < FrameData.length; p++) {
+		picy.push(pictures[FrameData[p].picture]);
 	}
 	let pictureToDisplay = [];
 	let i = 0;
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
 			for (let p = picy.length - 1; p >= 0; p--) {
-				if (p == 0 || (picy[p][i] != 0 && picy[p][i] != 32)) {
+				if (FrameData[p].flag == 0 || (picy[p][i] != 0 && picy[p][i] != 32)) {
 					pictureToDisplay.push(picy[p][i]);
 					pictureToDisplay.push(picy[p][i+1]);
 					pictureToDisplay.push(picy[p][i+2]);
@@ -209,30 +172,11 @@ function displayFramex(picIndex) {
 					break;
 				}
 			}
-			displayCharacter(pictureToDisplay.slice(i,i+4),x,y);
+			//displayCharacter(pictureToDisplay.slice(i,i+4),x,y);
 			i += 4;
 		}
 	}
-}
-
-function makeFrame(pics) {
-	let pictureToDisplay = [];
-	let i = 0;
-	for (let x = 0; x < dimx && x < 80; x++) {
-		for (let y = 0; y < dimy && y < 25; y++) {
-			if ((picture2[i] == 0 || picture2[i] == 32) /*&& frameSet[f].flag == 1*/) {
-				picture2[i] = picture0[i];
-				picture2[i+1] = picture0[i+1];
-				picture2[i+2] = picture0[i+2];
-				picture2[i+3] = picture0[i+3];
-			}
-			displayCharacter(picture2.slice(i,i+4),x,y);
-			i += 4;
-		}
-	}
-	for (let p = pics.length - 1; p >= 0; p--) {
-		
-	}
+	return pictureToDisplay;
 }
 
 function displayCharacter(characterData,x,y) {
@@ -318,34 +262,17 @@ function editing() {
 		showCharacterEdit("hover");
 	})
 }
+
 function increaseTime(num) {
 	time += num;
-	displayFrame();
-}
-function incrementFrameNumAndDisplay() {
-	resetted = false;
-	framenum++;
-	if (framenum >= dummySize) {
-		framenum = 0;
-		resetted = true;
+	if (time > finaltime) {
+		time = 0;
+	}
+	else if (time < 0) {
+		time = finaltime;
 	}
 	displayFrame();
-	//displayPicNum();
-	return resetted;
 }
-
-function decrementFrameNumAndDisplay() {
-	resetted = false;
-	framenum--;
-	if (framenum < 0) {
-		framenum = dummySize-1;
-		resetted = true;
-	}
-	displayFrame();
-	//displayPicNum();
-	return resetted;
-}
-
 
 function incrementPicNumAndDisplay() {
 	resetted = false;
@@ -379,21 +306,6 @@ function resetPicNum() {
 function displayPicNum() {
 	document.getElementById("PicNumDisplayer").innerHTML = "Current Image: " + picnum;
 }
-
-/*
-function playCMV(timestamp) {
-	resetFrame();
-	while (true) {
-		let dTime = timestamp - lastTime;
-		lastTime = timestamp;
-		if (dTime >= 10) {
-			if (incrementFrameNumAndDisplay()) {
-				break;
-			}
-		}
-	}
-}
-*/
 
 function clearCanvas() {
 	ctx.fillStyle = "white";
