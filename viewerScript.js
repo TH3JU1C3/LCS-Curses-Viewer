@@ -139,11 +139,14 @@ function displayFrame() {
 	let framesDisplayingAtCurrentTime = [];
 	for (let k = 0; k < dummySize; k++) {
 		if (frameSet[k].start <= time && time <= frameSet[k].stop) {
-			framesDisplayingAtCurrentTime.push(frameSet[k]);
+			let fsk = frameSet[k];
+			fsk.num = k;
+			framesDisplayingAtCurrentTime.push(fsk);
 		}
 	}
 	let picture = getPictureFromFrame(framesDisplayingAtCurrentTime);
-	console.log(framesDisplayingAtCurrentTime);
+	
+	showFrameDetails(framesDisplayingAtCurrentTime);
 	
 	let i = 0;
 	for (let x = 0; x < dimx && x < 80; x++) {
@@ -154,6 +157,29 @@ function displayFrame() {
 	}
 }
 
+function showFrameDetails(frameAtTime) {
+	sidePannel = document.getElementById("frame-detailer");
+	let innerhtml = "";
+	for (let f = 0; f < frameAtTime.length; f++) {
+		/* Sound Songs and Effect are unimplemented
+		if (frameAtTime[f].sound == 65535) frameAtTime[f].sound = -1;
+		if (frameAtTime[f].song == 65535) frameAtTime[f].song = -1;
+		if (frameAtTime[f].effect == 65535) frameAtTime[f].effect = -1;
+		 */
+		innerhtml += "<section> Frame Number: " + frameAtTime[f].num + " ";
+		innerhtml += "Picture: " + frameAtTime[f].picture + " ";
+		innerhtml += "Start: " + frameAtTime[f].start + " ";
+		innerhtml += "Stop: " + frameAtTime[f].stop + " ";
+		/* 		
+		innerhtml += "Sound: " + frameAtTime[f].sound + "<br>";
+		innerhtml += "Song: " + frameAtTime[f].song + "<br>";
+		innerhtml += "Effect: " + frameAtTime[f].effect + "<br>"; 
+		*/
+		innerhtml += "Flag: " + frameAtTime[f].flag + "</section>";
+	}
+	sidePannel.innerHTML = innerhtml;
+}
+
 function getPictureFromFrame(FrameData) {
 	let picy = [];
 	for (let p = 0; p < FrameData.length; p++) {
@@ -161,16 +187,20 @@ function getPictureFromFrame(FrameData) {
 	}
 	let pictureToDisplay = [];
 	let i = 0;
+	let charToDisplay = [0,0,0,0];
 	for (let x = 0; x < dimx && x < 80; x++) {
 		for (let y = 0; y < dimy && y < 25; y++) {
 			for (let p = picy.length - 1; p >= 0; p--) {
+				charToDisplay = [0,0,0,0];
 				if (FrameData[p].flag == 0 || (picy[p][i] != 0 && picy[p][i] != 32)) {
-					pictureToDisplay.push(picy[p][i]);
-					pictureToDisplay.push(picy[p][i+1]);
-					pictureToDisplay.push(picy[p][i+2]);
-					pictureToDisplay.push(picy[p][i+3]);
+					for (let j = 0; j < charToDisplay.length; j++) {
+						charToDisplay[j] = picy[p][i+j];
+					}
 					break;
 				}
+			}
+			for (let j = 0; j < charToDisplay.length; j++) {
+				pictureToDisplay.push(charToDisplay[j]);
 			}
 			//displayCharacter(pictureToDisplay.slice(i,i+4),x,y);
 			i += 4;

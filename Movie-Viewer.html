@@ -20,7 +20,7 @@
 		<button type="button" onclick="playCMV();">Play CMV</button>
 		<br>
 		<canvas id="movieScreen" width="640px", height="400px"></canvas>
-		<aside>
+		<aside style="display:none">
 			<button type="button" onclick="changeEditChar('00');">\0<br>00</button>
 			<button type="button" onclick="changeEditChar('01');">&#x263A;<br>01</button>
 			<button type="button" onclick="changeEditChar('02');">&#x263B;<br>02</button>
@@ -292,6 +292,15 @@
 			<button type="button" onclick="changeEditChar('FD');">&#x00B2;<br>FD</button>
 			<button type="button" onclick="changeEditChar('FE');">&#x25A0;<br>FE</button>
 			<button type="button" onclick="changeEditChar('FF');">&#x00A0;<br>FF</button>
+		</aside>
+		<aside id="frame-detailer">
+			<section>
+				Frame Number:<br>
+				Picture:<br>
+				Start:<br>
+				Stop:<br>
+				Flag:<br>
+			</section>
 		</aside>
 		<section id="info-panel">
 			<p>
