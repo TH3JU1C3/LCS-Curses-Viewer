@@ -19,6 +19,15 @@ const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 const ctx = canvas.getContext("2d");
+const slider = document.getElementById("timeSlider");
+const timeShow = document.getElementById("currentTimeHolder");
+timeShow.innerHTML = slider.value;
+
+slider.oninput = function() {
+  timeShow.innerHTML = "Current Time: " + this.value;
+  time = this.value;
+  displayFrame();
+}
 
 function readFile(type) {
 	data = [];
@@ -116,6 +125,7 @@ function getDummyData() {
 		frameSet.push(Frame);
 		if (Frame.stop > finaltime) {
 			finaltime = Frame.stop;
+			slider.max = finaltime;
 		}
 		console.log("PPMSD");
 	}
@@ -158,7 +168,7 @@ function displayFrame() {
 }
 
 function showFrameDetails(frameAtTime) {
-	sidePannel = document.getElementById("frame-detailer");
+	frameDetailer = document.getElementById("frame-detailer");
 	let innerhtml = "";
 	for (let f = 0; f < frameAtTime.length; f++) {
 		/* Sound Songs and Effect are unimplemented
@@ -166,7 +176,7 @@ function showFrameDetails(frameAtTime) {
 		if (frameAtTime[f].song == 65535) frameAtTime[f].song = -1;
 		if (frameAtTime[f].effect == 65535) frameAtTime[f].effect = -1;
 		 */
-		innerhtml += "<section> Frame Number: " + frameAtTime[f].num + " ";
+		innerhtml += "<p> Frame Number: " + frameAtTime[f].num + " ";
 		innerhtml += "Picture: " + frameAtTime[f].picture + " ";
 		innerhtml += "Start: " + frameAtTime[f].start + " ";
 		innerhtml += "Stop: " + frameAtTime[f].stop + " ";
@@ -175,9 +185,9 @@ function showFrameDetails(frameAtTime) {
 		innerhtml += "Song: " + frameAtTime[f].song + "<br>";
 		innerhtml += "Effect: " + frameAtTime[f].effect + "<br>"; 
 		*/
-		innerhtml += "Flag: " + frameAtTime[f].flag + "</section>";
+		innerhtml += "Flag: " + frameAtTime[f].flag + "</p>";
 	}
-	sidePannel.innerHTML = innerhtml;
+	frameDetailer.innerHTML = innerhtml;
 }
 
 function getPictureFromFrame(FrameData) {
@@ -291,17 +301,6 @@ function editing() {
 		console.log(editingCell);
 		showCharacterEdit("hover");
 	})
-}
-
-function increaseTime(num) {
-	time += num;
-	if (time > finaltime) {
-		time = 0;
-	}
-	else if (time < 0) {
-		time = finaltime;
-	}
-	displayFrame();
 }
 
 function incrementPicNumAndDisplay() {

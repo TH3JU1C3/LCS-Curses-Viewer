@@ -13,8 +13,6 @@
 		<button type="button" onclick="readFile('CMV');">Upload File</button>
 		<button type="button" onclick="incrementPicNumAndDisplay();">Next Picture</button>
 		<button type="button" onclick="decrementPicNumAndDisplay();">Prev Picture</button>
-		<button type="button" onclick="increaseTime(25);">Timeup</button>
-		<button type="button" onclick="increaseTime(-25);">Timedn</button>
 		<button type="button" onclick="editing();">Edit</button>
 		<button type="button" onclick="dlJSON('Temp_CMV.json');">Save JSON</button>
 		<button type="button" onclick="playCMV();">Play CMV</button>
@@ -293,8 +291,10 @@
 			<button type="button" onclick="changeEditChar('FE');">&#x25A0;<br>FE</button>
 			<button type="button" onclick="changeEditChar('FF');">&#x00A0;<br>FF</button>
 		</aside>
-		<aside id="frame-detailer">
-			<section>
+		<aside id="frame-editor">
+			<input type="range" min="0" max="0" value="0" class="slider" id="timeSlider">
+			<p id="currentTimeHolder"></p>
+			<section id="frame-detailer">
 				Frame Number:<br>
 				Picture:<br>
 				Start:<br>
