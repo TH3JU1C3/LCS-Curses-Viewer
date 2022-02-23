@@ -15,6 +15,8 @@ let picnummax = null;
 let dimx = null;
 let dimy = null;
 let dummySize = null;
+let cmvPlayback = false;
+let interval;
 const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -612,4 +614,21 @@ function addNewPicture() {
 		}
 	}
 	pictures.push(picture);
+}
+
+function playCMV() {
+	cmvPlayback = !cmvPlayback
+	if (cmvPlayback) {
+		interval = setInterval(incrementTimer,25);
+	}
+	else {
+		clearInterval(interval)
+	}
+}
+
+function incrementTimer() {
+	slider.value++;
+	timeShow.innerHTML = "Current Time: " + slider.value;
+	time = slider.value;
+	displayFrame();
 }
