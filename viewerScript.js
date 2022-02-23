@@ -21,7 +21,6 @@ const canvasHeight = canvas.height;
 const ctx = canvas.getContext("2d");
 const slider = document.getElementById("timeSlider");
 const timeShow = document.getElementById("currentTimeHolder");
-timeShow.innerHTML = slider.value;
 
 slider.oninput = function() {
   timeShow.innerHTML = "Current Time: " + this.value;
