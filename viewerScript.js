@@ -631,4 +631,8 @@ function incrementTimer() {
 	timeShow.innerHTML = "Current Time: " + slider.value;
 	time = slider.value;
 	displayFrame();
+	if (slider.value >= finaltime) {
+		cmvPlayback = false;
+		clearInterval(interval);
+	}
 }
