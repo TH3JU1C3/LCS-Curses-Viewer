@@ -15,6 +15,8 @@ let picnummax = null;
 let dimx = null;
 let dimy = null;
 let dummySize = null;
+let cmvPlayback = false;
+let interval;
 const canvas = document.getElementById("movieScreen");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -612,4 +614,47 @@ function addNewPicture() {
 		}
 	}
 	pictures.push(picture);
+}
+
+function playCMV() {
+	cmvPlayback = !cmvPlayback
+	if (cmvPlayback) {
+		interval = setInterval(incrementTimer,25);
+		if (document.getElementById("audioSrc").getAttribute("src") != "") {
+			document.getElementById("music").play();
+		}
+	}
+	else {
+		clearInterval(interval)
+		if (document.getElementById("audioSrc").getAttribute("src") != "") {
+			document.getElementById("music").pause();
+		}
+	}
+}
+
+function incrementTimer() {
+	slider.value++;
+	timeShow.innerHTML = "Current Time: " + slider.value;
+	time = slider.value;
+	displayFrame();
+	if (slider.value >= finaltime) {
+		cmvPlayback = false;
+		clearInterval(interval);
+	}
+}
+
+function uploadMusic() {
+	let files = document.getElementById('musicUploader').files;
+	console.log(files);
+	if (files.length <= 0) {
+		return false;
+	}
+	let file = files[0];
+	let fr = new FileReader();
+	fr.onload = function(e) {
+		document.getElementById("audioSrc").setAttribute("src", e.target.result);
+		document.getElementById("music").load();
+	}
+	fr.readAsDataURL(files[0]);
+	console.log(file, file.type);
 }
