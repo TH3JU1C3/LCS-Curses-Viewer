@@ -23,6 +23,8 @@ const canvasHeight = canvas.height;
 const ctx = canvas.getContext("2d");
 const slider = document.getElementById("timeSlider");
 const timeShow = document.getElementById("currentTimeHolder");
+const fileUploader = document.getElementById('uploader');
+const musicUploader = document.getElementById('musicUploader');
 
 slider.oninput = function() {
   timeShow.innerHTML = "Current Time: " + this.value;
@@ -30,9 +32,17 @@ slider.oninput = function() {
   displayFrame();
 }
 
-function readFile(type) {
+fileUploader.addEventListener("change", function() {
+	readFile();
+});
+
+musicUploader.addEventListener("change", function() {
+	uploadMusic();
+});
+
+function readFile() {
 	data = [];
-	let files = document.getElementById('uploader').files;
+	let files = fileUploader.files;
 	console.log(files);
 	if (files.length <= 0) {
 		return false;
@@ -47,7 +57,7 @@ function readFile(type) {
 			data.push(x.charCodeAt(i));
 		}
 		pictures = readPictures();
-		if (type === "CMV") {
+		if (getFileType(file) === "cmv") {
 			finaltime = -1;
 			getDummyData();
 			time = -1;
@@ -58,6 +68,10 @@ function readFile(type) {
 		displayPicture();
 	}
 };
+
+function getFileType(file) {
+	return file.name.split('.')[1]
+}
 
 function readBytes(index,size) {
 	let bytes = []
@@ -644,7 +658,7 @@ function incrementTimer() {
 }
 
 function uploadMusic() {
-	let files = document.getElementById('musicUploader').files;
+	let files = musicUploader.files;
 	console.log(files);
 	if (files.length <= 0) {
 		return false;

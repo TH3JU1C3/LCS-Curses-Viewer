@@ -10,9 +10,8 @@
 			Current Image: 
 		</p>
 		<input  type="file" id="uploader" value="Import" accept=".cmv" />
-		<button type="button" onclick="readFile('CMV');">Upload File</button>
-		<button type="button" onclick="incrementPicNumAndDisplay();">Next Picture</button>
 		<button type="button" onclick="decrementPicNumAndDisplay();">Prev Picture</button>
+		<button type="button" onclick="incrementPicNumAndDisplay();">Next Picture</button>
 		<button type="button" onclick="editing();">Edit</button>
 		<button type="button" onclick="dlJSON('Temp_CMV.json');">Save JSON</button>
 		<button type="button" onclick="playCMV();">Play CMV</button>
@@ -295,7 +294,6 @@
 			<input type="range" min="0" max="0" value="0" class="slider" id="timeSlider">
 			<p id="currentTimeHolder">Current Time: -1</p>
 			<input  type="file" id="musicUploader" value="Import" accept="audio/ogg" />
-			<button type="button" onclick="uploadMusic()" style="width:100px;">Upload Music</button><br>
 			<audio controls id="music">
 				<source id="audioSrc" src="" type="audio/ogg"> </source>
 				Browser Does Not Accept Audio
