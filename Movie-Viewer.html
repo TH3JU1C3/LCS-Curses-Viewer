@@ -9,7 +9,8 @@
 		<p id="PicNumDisplayer">
 			Current Image: 
 		</p>
-		<input  type="file" id="uploader" value="Import" accept=".cmv" />
+		<input type="button" id="loadFileCmv" value="Upload CMV" onclick="document.getElementById('uploader').click();" />
+		<input  type="file" id="uploader" value="Import" accept=".cmv" style="display:none;"/>
 		<button type="button" onclick="decrementPicNumAndDisplay();">Prev Picture</button>
 		<button type="button" onclick="incrementPicNumAndDisplay();">Next Picture</button>
 		<button type="button" onclick="editing();">Edit</button>
@@ -292,8 +293,9 @@
 		</aside>
 		<aside id="frame-editor">
 			<input type="range" min="0" max="0" value="0" class="slider" id="timeSlider">
-			<p id="currentTimeHolder">Current Time: -1</p>
-			<input  type="file" id="musicUploader" value="Import" accept="audio/ogg" />
+			<span id="currentTimeHolder">Current Time: -1</span><br>
+			<input type="button" id="loadFileMusic" value="Upload Music" onclick="document.getElementById('musicUploader').click();" />
+			<input value="upload" type="file" id="musicUploader" value="Import" accept="audio/ogg" style="display:none;"/>
 			<audio controls id="music">
 				<source id="audioSrc" src="" type="audio/ogg"> </source>
 				Browser Does Not Accept Audio
