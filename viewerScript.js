@@ -57,7 +57,7 @@ function readFile() {
 			data.push(x.charCodeAt(i));
 		}
 		pictures = readPictures();
-		if (getFileType(file) === "cmv") {
+		if (fileUploader.accept === ".cmv") {
 			finaltime = -1;
 			getDummyData();
 			time = -1;
@@ -68,10 +68,6 @@ function readFile() {
 		displayPicture();
 	}
 };
-
-function getFileType(file) {
-	return file.name.split('.')[1]
-}
 
 function readBytes(index,size) {
 	let bytes = []
