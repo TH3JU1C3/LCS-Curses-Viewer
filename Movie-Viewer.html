@@ -13,12 +13,12 @@
 		<input  type="file" id="uploader" value="Import" accept=".cmv" style="display:none;"/>
 		<button type="button" onclick="decrementPicNumAndDisplay();">Prev Picture</button>
 		<button type="button" onclick="incrementPicNumAndDisplay();">Next Picture</button>
-		<button type="button" onclick="editing();">Edit</button>
+		<button id="toggle-edit-button" type="button" onclick="toggleEditing2();">Edit Pictures</button>
 		<button type="button" onclick="dlJSON('Temp_CMV.json');">Save JSON</button>
 		<button type="button" onclick="playCMV();">Play CMV</button>
 		<br>
 		<canvas id="movieScreen" width="640px", height="400px"></canvas>
-		<aside style="display:none">
+		<aside id="picture-editor" style="display:none">
 			<button type="button" onclick="changeEditChar('00');">\0<br>00</button>
 			<button type="button" onclick="changeEditChar('01');">&#x263A;<br>01</button>
 			<button type="button" onclick="changeEditChar('02');">&#x263B;<br>02</button>
@@ -349,6 +349,7 @@
 			<button type="button" onclick="addNewPicture();">Add additional picture</button>
 		</section>
 		<a id="downloadAnchorElem" style="display:none"></a>
+		<script src="CMVScript.js"></script>
 		<script src="viewerScript.js"></script>
 	</body>
 </html>

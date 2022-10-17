@@ -13,13 +13,13 @@
 		<input  type="file" id="uploader" value="Import" accept=".cpc" style="display:none;"/>
 		<button type="button" onclick="decrementPicNumAndDisplay();">Prev Image</button>
 		<button type="button" onclick="incrementPicNumAndDisplay();">Next Image</button>
-		<button type="button" onclick="editing();">Edit</button>
+		<button type="button" onclick="toggleEditing();">Edit Pictures</button>
 		<button type="button" onclick="dlJSON('Temp_CPC.json');">Save JSON</button>
 		<br>
 		<canvas id="movieScreen" width="640px", height="400px"></canvas>
 		<img src="example.png"></img>
 		
-		<aside>
+		<aside id="picture-editor">
 			<button type="button" onclick="changeEditChar('00');">\0<br>00</button>
 			<button type="button" onclick="changeEditChar('01');">&#x263A;<br>01</button>
 			<button type="button" onclick="changeEditChar('02');">&#x263B;<br>02</button>
